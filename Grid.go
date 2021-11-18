@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"math"
 )
 
@@ -10,6 +11,10 @@ type Grid struct {
 	CellSize float32
 	Cells    map[[3]int]Cell
 }
+
+var (
+	aigErr = errors.New("Point was already in grid")
+)
 
 func floatToIntId(num, totalSize, cellSize float32) int {
 	return int(math.Floor(float64((num + totalSize/2) / cellSize)))
@@ -26,7 +31,7 @@ func NewGrid(totalSize, cellSize float32) Grid {
 			for z := -totalSize / 2; z <= totalSize/2; z += cellSize {
 				zi := floatToIntId(z, totalSize, cellSize)
 
-				cells[[3]int{xi,yi,zi}] = false
+				cells[[3]int{xi, yi, zi}] = false
 			}
 		}
 	}
@@ -37,16 +42,24 @@ func NewGrid(totalSize, cellSize float32) Grid {
 	return g
 }
 
-func (g *Grid) createUid(point *Vector3) (int, int, int) {
+func (g *Grid) createUid(point *Vector3) [3]int {
 	x := int(math.Floor(float64(point.X / g.CellSize)))
 	y := int(math.Floor(float64(point.Y / g.CellSize)))
 	z := int(math.Floor(float64(point.Z / g.CellSize)))
-	return x, y, z
+	return [3]int{x, y, z}
 }
 
-func (g *Grid) Insert(point *Vector3) {
-	x, y, z := g.createUid(point)
-	g.Cells[[3]int{x,y,z}] = true
+func (g *Grid) Insert(point *Vector3) ([3]int, error) {
+	xyz := g.createUid(point)
+
+	cell := g.Cells[xyz]
+	if cell == true {
+		return xyz, aigErr
+	} else {
+		g.Cells[xyz] = true
+		return xyz, nil
+	}
+
 }
 
 func (g *Grid) indexIsValid(index [3]int) bool {
@@ -63,8 +76,8 @@ func (g *Grid) GetNeighbors(x, y, z int, hasToBeFree bool) map[[3]int]Cell {
 				neighborY := y + yi
 				neighborZ := z + zi
 
-				if g.indexIsValid([3]int{neighborX,neighborY,neighborZ}) {
-					occupied := g.Cells[[3]int{neighborX,neighborY,neighborZ}]
+				if g.indexIsValid([3]int{neighborX, neighborY, neighborZ}) {
+					occupied := g.Cells[[3]int{neighborX, neighborY, neighborZ}]
 					if hasToBeFree && bool(!occupied) {
 						neighbours[[3]int{neighborX, neighborY, neighborZ}] = occupied
 					} else {

@@ -1,17 +1,16 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 )
 
 func main() {
-	g := NewGrid(30, 0.1)
+	g := NewGrid(1, 0.1)
 
-	for i := 0; i < 10000; i++ {
+	for i := 0; i < 10; i++ {
 		RandomInsert(&g)
 	}
-
-
 }
 
 func RandomFloatInRange(low float32, high float32) float32 {
@@ -19,10 +18,12 @@ func RandomFloatInRange(low float32, high float32) float32 {
 }
 
 func RandomInsert(g *Grid) {
+	InRange := float32(1)
 	randomPoint := Vector3{
-		X: RandomFloatInRange(-15, 15),
-		Y: RandomFloatInRange(-15, 15),
-		Z: RandomFloatInRange(-15, 15),
+		X: RandomFloatInRange(-InRange*0.5, InRange*0.5),
+		Y: RandomFloatInRange(-InRange*0.5, InRange*0.5),
+		Z: RandomFloatInRange(-InRange*0.5, InRange*0.5),
 	}
-	g.Insert(&randomPoint)
+	insert, err := g.Insert(&randomPoint)
+	fmt.Println(randomPoint, insert, err)
 }
