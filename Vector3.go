@@ -1,4 +1,4 @@
-package GoHashGrid
+package goHashGrid
 
 import "math"
 
