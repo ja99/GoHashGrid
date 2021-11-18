@@ -42,7 +42,7 @@ func NewGrid(totalSize, cellSize float32) Grid {
 	return g
 }
 
-func (g *Grid) createUid(point *Vector3) [3]int {
+func (g *Grid) GetUidToPoint(point *Vector3) [3]int {
 	x := int(math.Floor(float64(point.X / g.CellSize)))
 	y := int(math.Floor(float64(point.Y / g.CellSize)))
 	z := int(math.Floor(float64(point.Z / g.CellSize)))
@@ -50,7 +50,7 @@ func (g *Grid) createUid(point *Vector3) [3]int {
 }
 
 func (g *Grid) Insert(point *Vector3) ([3]int, error) {
-	xyz := g.createUid(point)
+	xyz := g.GetUidToPoint(point)
 
 	cell := g.Cells[xyz]
 	if cell == true {
