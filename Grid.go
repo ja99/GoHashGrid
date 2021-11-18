@@ -1,4 +1,4 @@
-package goHashGrid
+package GoHashGrid
 
 import (
 	"errors"
