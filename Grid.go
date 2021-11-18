@@ -89,7 +89,3 @@ func (g *Grid) GetNeighbors(x, y, z int, hasToBeFree bool) map[[3]int]Cell {
 	}
 	return neighbours
 }
-
-//ToDo: GetPointsInArea
-//ToDo: GetFreeCellsInArea
-//ToDo: GetTotalSize
