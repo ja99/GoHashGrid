@@ -76,27 +76,31 @@ func (g *Grid) indexIsValid(index [3]int) bool {
 	return ok
 }
 
+func (g *Grid) neighbourCheck(neighbours map[[3]int]Cell, neighbourUid [3]int, hasToBeFree bool) map[[3]int]Cell {
+	if g.indexIsValid(neighbourUid) {
+		occupied := g.Cells[neighbourUid]
+		if hasToBeFree && !bool(occupied) {
+			neighbours[neighbourUid] = occupied
+		} else {
+			neighbours[neighbourUid] = occupied
+		}
+	}
+	return neighbours
+}
+
 func (g *Grid) GetNeighbors(x, y, z int, hasToBeFree bool) map[[3]int]Cell {
 	neighbours := make(map[[3]int]Cell)
 
 	for xi := -1; xi < 2; xi += 2 {
-		for yi := -1; yi < 2; yi += 2 {
-			for zi := -1; zi < 2; zi += 2 {
-				neighborX := x + xi
-				neighborY := y + yi
-				neighborZ := z + zi
-
-				if g.indexIsValid([3]int{neighborX, neighborY, neighborZ}) {
-					occupied := g.Cells[[3]int{neighborX, neighborY, neighborZ}]
-					if hasToBeFree && !bool(occupied) {
-						neighbours[[3]int{neighborX, neighborY, neighborZ}] = occupied
-					} else {
-						neighbours[[3]int{neighborX, neighborY, neighborZ}] = occupied
-					}
-				}
-			}
-		}
+		neighbours = g.neighbourCheck(neighbours, [3]int{x + xi, y, z}, hasToBeFree)
 	}
+	for yi := -1; yi < 2; yi += 2 {
+		neighbours = g.neighbourCheck(neighbours, [3]int{x, y + yi, z}, hasToBeFree)
+	}
+	for zi := -1; zi < 2; zi += 2 {
+		neighbours = g.neighbourCheck(neighbours, [3]int{x, y, z + zi}, hasToBeFree)
+	}
+
 	return neighbours
 }
 
