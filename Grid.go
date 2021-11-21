@@ -16,20 +16,28 @@ var (
 	aigErr = errors.New("Point was already in grid")
 )
 
-func floatToIntId(num, totalSize, cellSize float32) int {
-	return int(math.Floor(float64((num + totalSize/2) / cellSize)))
+func floatToIntId(num, cellSize float32) int {
+	return int(math.Floor(float64(num / cellSize)))
+}
+
+func (g *Grid) IntIdToVector3(uid [3]int) Vector3 {
+	return Vector3{
+		X: float32(uid[0]) * g.CellSize,
+		Y: float32(uid[1]) * g.CellSize,
+		Z: float32(uid[2]) * g.CellSize,
+	}
 }
 
 func NewGrid(totalSize, cellSize float32) Grid {
 	cells := make(map[[3]int]Cell)
 	for x := -totalSize / 2; x <= totalSize/2; x += cellSize {
-		xi := floatToIntId(x, totalSize, cellSize)
+		xi := floatToIntId(x, cellSize)
 
 		for y := -totalSize / 2; y <= totalSize/2; y += cellSize {
-			yi := floatToIntId(y, totalSize, cellSize)
+			yi := floatToIntId(y, cellSize)
 
 			for z := -totalSize / 2; z <= totalSize/2; z += cellSize {
-				zi := floatToIntId(z, totalSize, cellSize)
+				zi := floatToIntId(z, cellSize)
 
 				cells[[3]int{xi, yi, zi}] = false
 			}
