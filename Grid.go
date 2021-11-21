@@ -31,6 +31,7 @@ func (g *Grid) IntIdToVector3(uid [3]int) Vector3 {
 
 func NewGrid(totalSize, cellSize float32) Grid {
 	cells := make(map[[3]int]Cell)
+
 	for x := -totalSize / 2; x <= totalSize/2; x += cellSize {
 		xi := floatToIntId(x, cellSize)
 
