@@ -78,6 +78,7 @@ func (g *Grid) indexIsValid(index [3]int) bool {
 
 func (g *Grid) GetNeighbors(x, y, z int, hasToBeFree bool) map[[3]int]Cell {
 	neighbours := make(map[[3]int]Cell)
+
 	for xi := -1; xi < 2; xi += 2 {
 		for yi := -1; yi < 2; yi += 2 {
 			for zi := -1; zi < 2; zi += 2 {
@@ -87,7 +88,7 @@ func (g *Grid) GetNeighbors(x, y, z int, hasToBeFree bool) map[[3]int]Cell {
 
 				if g.indexIsValid([3]int{neighborX, neighborY, neighborZ}) {
 					occupied := g.Cells[[3]int{neighborX, neighborY, neighborZ}]
-					if hasToBeFree && bool(!occupied) {
+					if hasToBeFree && !bool(occupied) {
 						neighbours[[3]int{neighborX, neighborY, neighborZ}] = occupied
 					} else {
 						neighbours[[3]int{neighborX, neighborY, neighborZ}] = occupied
