@@ -14,6 +14,7 @@ type Grid struct {
 
 var (
 	aigErr = errors.New("Point was already in grid")
+	nnoErr = errors.New("No Neighbour in a 5% radius(hamilton) was occupied")
 )
 
 func floatToIntId(num, cellSize float32) int {
@@ -96,4 +97,39 @@ func (g *Grid) GetNeighbors(x, y, z int, hasToBeFree bool) map[[3]int]Cell {
 		}
 	}
 	return neighbours
+}
+
+func (g *Grid) NextOccupiedNeighbour(uid [3]int) ([3]int, error) {
+	searchRadius := 1
+	alreadySearched := make(map[[3]int]bool)
+	alreadySearched[uid] = true
+	found := false
+
+	for !found {
+		//if search radius grows larger than 5% of the grids total size then cancel
+		if searchRadius > int(math.Pow(float64(len(g.Cells)), 1.0/3.0)*0.05) {
+			return [3]int{0, 0, 0}, nnoErr
+		}
+		for xi := uid[0] - searchRadius; xi < uid[0]+searchRadius; xi++ {
+			for yi := uid[1] - searchRadius; yi < uid[1]+searchRadius; yi++ {
+				for zi := uid[2] - searchRadius; zi < uid[2]+searchRadius; zi++ {
+					currentId := [3]int{xi, yi, zi}
+
+					_, alreadyInList := alreadySearched[currentId]
+					if alreadyInList {
+						continue
+					} else if !g.indexIsValid(currentId) {
+						alreadySearched[currentId] = false
+						continue
+					} else if g.Cells[currentId] {
+						found = true
+						return currentId, nil
+					}
+				}
+			}
+		}
+		searchRadius += 1
+	}
+	//obligatory return which can never be reached
+	return [3]int{0, 0, 0}, nil
 }
