@@ -14,7 +14,7 @@ type Grid struct {
 
 var (
 	aigErr = errors.New("Point was already in grid")
-	nnoErr = errors.New("No Neighbour in a 5% radius(hamilton) was occupied")
+	nnoErr = errors.New("No Neighbour in a 5% radius(chess) was occupied")
 )
 
 func floatToIntId(num, cellSize float32) int {
@@ -82,7 +82,7 @@ func (g *Grid) neighbourCheck(neighbours map[[3]int]Cell, neighbourUid [3]int, h
 		occupied := g.Cells[neighbourUid]
 		if hasToBeFree && !bool(occupied) {
 			neighbours[neighbourUid] = occupied
-		} else {
+		} else if !hasToBeFree {
 			neighbours[neighbourUid] = occupied
 		}
 	}
