@@ -32,6 +32,11 @@ func (v Vector3) Multiply(num float32) Vector3 {
 	return v
 }
 
+func SquaredDistance(a, b Vector3) float32 {
+	squaredDist := math.Pow(float64(a.X-b.X), 2) + math.Pow(float64(a.Y-b.Y), 2) + math.Pow(float64(a.Z-b.Z), 2)
+	return float32(squaredDist)
+}
+
 func Distance(a, b Vector3) float32 {
 	dist := math.Sqrt(math.Pow(float64(a.X-b.X), 2) + math.Pow(float64(a.Y-b.Y), 2) + math.Pow(float64(a.Z-b.Z), 2))
 	return float32(dist)
