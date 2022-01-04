@@ -21,8 +21,8 @@ func floatToIntId(num, cellSize float32) int {
 	return int(math.Floor(float64(num / cellSize)))
 }
 
-func (g *Grid) IntIdToVector3(uid [3]int) Vector3 {
-	return Vector3{
+func (g *Grid) IntIdToVector3(uid [3]int) *Vector3 {
+	return &Vector3{
 		X: float32(uid[0]) * g.CellSize,
 		Y: float32(uid[1]) * g.CellSize,
 		Z: float32(uid[2]) * g.CellSize,
